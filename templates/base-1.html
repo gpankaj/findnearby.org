@@ -15,56 +15,23 @@
 
 
 
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-
-<!-- Updated stylesheet url -->
-<link rel="stylesheet" href="//jonthornton.github.io/jquery-timepicker/jquery.timepicker.css">
-
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
-
-<!-- Updated JavaScript url -->
-<script src="//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"></script>
-
-
-
-
 <script type="text/javascript">
     function showPosition(){
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition(function(position){
-
-                console.log("lat = " + position.coords.latitude + " long = " + position.coords.longitude)
-                //document.getElementById('lat').value = position.coords.latitude
-                //document.getElementById('long').value = position.coords.longitude
-                //document.getElementById("geolocation").submit();
-
-                $.ajax({
-                    type:'GET',
-                    async: false,
-                    url: '/location?lat='+ position.coords.latitude + '&long='+position.coords.longitude,
-
-
-                    beforeSend: function(xhr){
-                        $('.before_loading').html('Loading...');
-                    },
-                    success: function(msg){
-                        $('.after_loading').html(msg);
-                    }
-                });
+                var positionInfo = position.coords.latitude + "," + position.coords.longitude;
+                document.getElementById('location').value = positionInfo
+                document.getElementById("result").innerHTML = positionInfo;
+                document.getElementById("geolocation").submit();
             });
         } else{
             alert("Sorry, your browser does not support HTML5 geolocation.");
         }
     }
-    showPosition()
+
+
 
 </script>
-
-
-
-
 
 
 
@@ -171,8 +138,7 @@ $(document).ready(function() {
 
 
 {% block content %}
-    <div id="before_loading"></div>
-    <div id="after_loading">
+    <body onload="showPosition()">
     {% for message in get_flashed_messages() %}
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -186,10 +152,18 @@ $(document).ready(function() {
     {% endblock %}
 
 
-
-
-
+    <div id="result">
+        <!--Position information will be inserted here-->
     </div>
+    <button type="button" onclick="showPosition();">Show Position</button>
+
+    <form id = "geolocation" action="/location" method="POST" >
+
+        <input type="text" id = "location" name="location" value="" />
+        <input type="submit" />
+
+    </form>
+    </body>
 {% endblock %}
 
 </div>
@@ -198,10 +172,6 @@ $(document).ready(function() {
 
 
 {% block scripts %}
-
-
-
-
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />

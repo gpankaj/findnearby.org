@@ -12,11 +12,16 @@ class Auth:
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
     OAUTHLIB_INSECURE_TRANSPORT = '1'
     WTF_CSRF_CHECK_DEFAULT = False
+    WTF_CSRF_ENABLED = False
     SCOPE = ['profile', 'email']
 
 class Config:
+    #UPLOAD_FOLDER = 'c:\myapp\\'
+    UPLOAD_FOLDER = 'C:\Users\pankajg\Desktop\flask\livedeals\static\images\\'
+
     SECRET_KEY = os.environ.get('SECRET_KEY')
     WTF_CSRF_CHECK_DEFAULT =False
+    WTF_CSRF_ENABLED = False
 
 class DevelopmentConfig(Config):
     DEBUG=True

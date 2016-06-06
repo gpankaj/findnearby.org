@@ -1,0 +1,32 @@
+<div class="row-fluid container-folio">
+{% for offer in offers %}
+
+<div class="col-xs-4">
+    <div class="thumbnail">
+        <!-- IMAGE CONTAINER-->
+       {% set list1 = offer.offer_pictures_location.split(',') %}
+      <image src="{{url_for('static',filename=list1[0]) | escape}}" height="100" width="350">
+
+          <!--END IMAGE CONTAINER-->
+          <!-- CAPTION -->
+          <div class="caption">
+            <h3 class="">{{offer.offer_description}}</h3>
+            <p class="">{{offer.validity}}</p>
+            <div class="row">
+                <div class="col-xs-6">
+                    <p class="lead">HURRY</p>
+                </div>
+                <div class="col-xs-6">
+                <a class="btn btn-success btn-block" href="http://www.bootstraptor.com">Add to favourite</a>
+                </div>
+            </div>
+          </div>	            <!--END CAPTION -->
+    </div>
+     <!-- END: THUMBNAIL -->
+</div>
+
+{% endfor %}
+</div>
+
+
+

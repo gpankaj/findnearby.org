@@ -3,6 +3,7 @@ from flask.ext.bootstrap import Bootstrap
 from flask.ext.login import LoginManager
 from config import config
 import os
+from werkzeug import secure_filename
 
 
 
@@ -10,6 +11,8 @@ bootstrap_obj = Bootstrap()
 login_manager = LoginManager()
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['WTF_CSRF_CHECK_DEFAULT'] = 'False'
+
+os.environ['WTF_CSRF_ENABLED'] = 'False'
 
 def create_app(config_name):
     app = Flask(__name__)

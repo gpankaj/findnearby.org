@@ -23,6 +23,7 @@ class User(sqlalchemy_obj.Model,UserMixin):
     establishments = sqlalchemy_obj.relationship('Establishment',backref='owner',lazy='dynamic')
 
 
+
 #User can be customer and/or service_provider and/or both
 
 
@@ -51,12 +52,13 @@ class Establishment(sqlalchemy_obj.Model):
     proprietor = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=True)
     phone = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), nullable=True)
     email = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), nullable=True)
-    geo_cordinates = sqlalchemy_obj.Column(sqlalchemy_obj.String(256), nullable=True)
-    address = sqlalchemy_obj.Column(sqlalchemy_obj.String(256), nullable=True)
+    geo_cordinates = sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
+    address = sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
     is_active = sqlalchemy_obj.Column(sqlalchemy_obj.Boolean, default=True)
-    created_at = sqlalchemy_obj.Column(DateTime, default=func.now())
+    created_at = sqlalchemy_obj.Column(sqlalchemy_obj.DateTime, default=func.now())
 
-    type = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), unique=True, nullable=False) # shop for selling items or I provide services
+    type = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), nullable=False) # shop for selling items or I provide services
+    establishment_types = sqlalchemy_obj.relationship('Establishment_Type',backref = 'establishment',lazy='dynamic')
 
     establishment_description = sqlalchemy_obj.Column(sqlalchemy_obj.String(5026), nullable=True)
     home_delivery_option_details =  sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True) # not valid, available, not-available
@@ -64,7 +66,8 @@ class Establishment(sqlalchemy_obj.Model):
     open_days =  sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
     open_time = sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
 
-
+    #Fill if this is inside a shopping complex.
+    name_of_shopping_complex = sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
     # This creates a field with the name owner in Service_Provider_Service, so i can query by Service_Provider_Service.owner()
     # above query will give us Service_Provider model. It;s a virtual column not a physical column.
 
@@ -75,6 +78,17 @@ class Establishment(sqlalchemy_obj.Model):
 
     offers = sqlalchemy_obj.relationship('Offer', backref='owner', lazy='dynamic')
     establishment_responses = sqlalchemy_obj.relationship('Customer_Requirement_Response', backref='establishment', lazy='dynamic')
+
+
+
+
+class Establishment_Type(sqlalchemy_obj.Model):
+    __tablename__ = 'establishment_types'
+    id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, primary_key=True)
+    establishments_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('establishments.id'))
+    name = sqlalchemy_obj.Column(sqlalchemy_obj.String(256), nullable=False)
+
+
 
 class Establishment_Item(sqlalchemy_obj.Model):
     __tablename__ = 'establishment_items'
@@ -154,10 +168,18 @@ class Offer(sqlalchemy_obj.Model):
     __tablename__ = 'offers'
     id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, primary_key=True)
     is_active = sqlalchemy_obj.Column(sqlalchemy_obj.Boolean, default=True)
-    validity = sqlalchemy_obj.Column(DateTime, nullable=False)
+    validity = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=False)
+    user_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('users.id'))
+
     establishments_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('establishments.id'))
-    offer_picture = sqlalchemy_obj.Column(sqlalchemy_obj.Binary)
-    offer_description = sqlalchemy_obj.Column(sqlalchemy_obj.String(5026), nullable=True)
+
+    offer_pictures_location = sqlalchemy_obj.Column(sqlalchemy_obj.String(1024))
+
+    offer_description = sqlalchemy_obj.Column(sqlalchemy_obj.String(2052), nullable=True)
+    conditions = sqlalchemy_obj.Column(sqlalchemy_obj.String(2052), nullable=True)
+    created_at = sqlalchemy_obj.Column(DateTime, default=func.now())
+    # We add this to favourite of customer account
+    favourite = sqlalchemy_obj.Column(sqlalchemy_obj.String(128))
     customer_responses = sqlalchemy_obj.relationship('Customer_Requirement_Response',backref='offer',lazy='dynamic')
 
 class Customer_Requirement_Response(sqlalchemy_obj.Model):
@@ -175,8 +197,6 @@ class Customer_Requirement_Response(sqlalchemy_obj.Model):
     establishment_response = sqlalchemy_obj.Column(sqlalchemy_obj.Boolean)
     # It may be marked by customer or establishment as offending response.
     marked_as_offending = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=True)
-
-
 
 
 @login_manager.user_loader

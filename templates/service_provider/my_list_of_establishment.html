@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+
+{% block replace_login_url %}
+    <a href="{{auth_url}}" class="navbar-brand">Login with Google</a>
+{% endblock %}
+
+
+{% block page_content  %}
+
+<div class="container">
+
+    <h1>My Establishments  </h1>
+
+  {% include "service_provider/table_list_of_establishments.html" %}
+
+</div>
+
+
+{% endblock %}
+
