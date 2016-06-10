@@ -57,6 +57,7 @@ class Establishment(sqlalchemy_obj.Model):
     is_active = sqlalchemy_obj.Column(sqlalchemy_obj.Boolean, default=True)
     created_at = sqlalchemy_obj.Column(sqlalchemy_obj.DateTime, default=func.now())
 
+    verified_at = sqlalchemy_obj.Column(sqlalchemy_obj.DateTime, nullable=True)
     type = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), nullable=False) # shop for selling items or I provide services
     establishment_types = sqlalchemy_obj.relationship('Establishment_Type',backref = 'establishment',lazy='dynamic')
 
@@ -111,6 +112,8 @@ class Establishment_Item(sqlalchemy_obj.Model):
 class All_Service(sqlalchemy_obj.Model):
     __tablename__ = 'all_services'
     id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, primary_key=True)
+    service_name = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), unique=True, nullable=False)
+    created_at = sqlalchemy_obj.Column(DateTime, default=func.now())
 
     # Sell/Buy product
     # Multiple
@@ -122,12 +125,7 @@ class All_Service(sqlalchemy_obj.Model):
     # Doctor (Service)
     #
     establishment_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('establishments.id'))
-
     requirement_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('customer_requirements.id'))
-
-    service_name = sqlalchemy_obj.Column(sqlalchemy_obj.String(1), unique=True, nullable=False)
-
-    created_at = sqlalchemy_obj.Column(DateTime, default=func.now())
 
 
 
@@ -170,6 +168,9 @@ class Offer(sqlalchemy_obj.Model):
     is_active = sqlalchemy_obj.Column(sqlalchemy_obj.Boolean, default=True)
     validity = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=False)
     user_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('users.id'))
+    category = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=True)
+
+    tags = sqlalchemy_obj.Column(sqlalchemy_obj.String(256), nullable=True)
 
     establishments_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('establishments.id'))
 
@@ -198,6 +199,29 @@ class Customer_Requirement_Response(sqlalchemy_obj.Model):
     # It may be marked by customer or establishment as offending response.
     marked_as_offending = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=True)
 
+
+class Event(sqlalchemy_obj.Model):
+    __tablename__='events'
+    id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, primary_key=True)
+
+    name = sqlalchemy_obj.Column(sqlalchemy_obj.String(126), nullable=True)
+    description = sqlalchemy_obj.Column(sqlalchemy_obj.String(5026), nullable=True)
+    start_time = sqlalchemy_obj.Column(sqlalchemy_obj.String(126), nullable=True)
+    end_time=sqlalchemy_obj.Column(sqlalchemy_obj.String(126), nullable=True)
+
+    website = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=True)
+    proprietor = sqlalchemy_obj.Column(sqlalchemy_obj.String(128), nullable=True)
+    phone = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), nullable=True)
+
+    email = sqlalchemy_obj.Column(sqlalchemy_obj.String(64), nullable=True)
+    geo_cordinates = sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
+    address = sqlalchemy_obj.Column(sqlalchemy_obj.String(512), nullable=True)
+
+    free=sqlalchemy_obj.Column(sqlalchemy_obj.Boolean,nullable=False, default=True)
+    entry_fee = sqlalchemy_obj.Column(sqlalchemy_obj.String(126), nullable=False)
+
+    user_id = sqlalchemy_obj.Column(sqlalchemy_obj.Integer, ForeignKey('users.id'))
+    created_at = sqlalchemy_obj.Column(DateTime, default=func.now())
 
 @login_manager.user_loader
 def load_user(user_id):

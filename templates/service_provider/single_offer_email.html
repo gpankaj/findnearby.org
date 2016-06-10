@@ -1,0 +1,25 @@
+
+<html>
+
+
+<div class="thumbnail">
+        <!-- IMAGE CONTAINER-->
+
+    <!--    <image src="cid:{{url_for('static',filename=image)}}" alt="Mountain View" height="100" width="350"/>-->
+
+        <image src="cid:{{url_for('static',filename=image)}}" alt="Mountain View" height="100" width="350"/>
+
+
+          <!--END IMAGE CONTAINER-->
+          <!-- CAPTION -->
+          <div class="caption">
+
+            <h3 class="">{{offer.offer_description}}</h3>
+            <p class="">{{offer.validity}}</p>
+            <p class="">{{offer.current_distance}} kms from you</p>
+
+          </div>	            <!--END CAPTION -->
+</div>
+
+
+</html>

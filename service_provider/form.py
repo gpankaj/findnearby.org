@@ -6,10 +6,6 @@ from wtforms.validators import Required, Length, Email, EqualTo, Optional
 class NewEstablishmentForm(Form):
     establishment_name = StringField('Name of Establishment',render_kw={"placeholder": "Name of Your Establishment"})
     from models import Establishment_Type
-    for type in  Establishment_Type.query.all():
-
-        print "I got" + str(type.id)
-        print type.name
 
     type = SelectField('Establishment Type',coerce=int, choices=[(int(type.id), str(type.name)) for type in Establishment_Type.query.all()], validators=[Optional()])
 
@@ -40,6 +36,9 @@ class EditOfferForm(Form):
 class AddOfferForm(Form):
     offer_description = StringField('Heading of the offer')
     offer_picture = FileField('Add picture related to offer',render_kw={'multiple': True},)
+    from models import All_Service
+    category = SelectField('Category', coerce=int,choices=[(int(category.id), str(category.service_name)) for category in All_Service.query.all()],validators=[Optional()])
+    tags = StringField('Specify some tags to identify your business')
     validity = StringField('Specify a date/time till this offer is valid')
     conditions = TextAreaField('Specify your terms and conditions')
     establsihment = SelectField('establishment name',choices=[('est1','establishemnt 1')],coerce=int)

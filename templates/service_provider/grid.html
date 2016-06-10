@@ -1,26 +1,48 @@
 <div class="row-fluid container-folio">
+
+
+
 {% for offer in offers %}
 
-<div class="col-xs-4">
+
+
+<div class="col-xs-4" id="{{offer.id}}">
     <div class="thumbnail">
         <!-- IMAGE CONTAINER-->
        {% set list1 = offer.offer_pictures_location.split(',') %}
-      <image src="{{url_for('static',filename=list1[0]) | escape}}" height="100" width="350">
 
+
+      <a href="{{ url_for('service_provider.ShowOffer',offer_id=offer.id) }} ">
+
+        <image src="{{url_for('static',filename=list1[0]) | escape}}" height="100" width="350"/>
+
+      </a>
           <!--END IMAGE CONTAINER-->
           <!-- CAPTION -->
           <div class="caption">
+              <!-- hidden fields to store modal result in -->
+                <input type="hidden" id="phone">
+              <a data-toggle="modal" data-id="{{offer.id}}" title="Email this offer complete details" class="open-dialog btn btn-primary" href="#getEmailForm">Email Me This Offer</a>
+
+              <button type="button" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-heart" title="Add to my Favourite"></span>
+                  Add to my Favourite
+              </button>
+
             <h3 class="">{{offer.offer_description}}</h3>
             <p class="">{{offer.validity}}</p>
+            <p class="">{{offer.current_distance}} kms from you</p>
+
+            <a data-toggle="modal" data-id="{{offer.id}}" title="Request call back" class="open-dialog btn btn-primary" href="#getPhoneForm">
+                            <span class="glyphicon glyphicon-earphone"></span>Request Callback
+            </a>
+
             <div class="row">
                 <div class="col-xs-6">
                     <p class="lead">HURRY</p>
                 </div>
-                <div class="col-xs-6">
-                <a class="btn btn-success btn-block" href="http://www.bootstraptor.com">Add to favourite</a>
-                </div>
             </div>
-          </div>	            <!--END CAPTION -->
+          </div>           <!--END CAPTION -->
     </div>
      <!-- END: THUMBNAIL -->
 </div>
@@ -28,5 +50,68 @@
 {% endfor %}
 </div>
 
+<!--To pass value from html form to model http://stackoverflow.com/questions/10626885/passing-data-to-a-bootstrap-modal-->
+<!-- Modal -->
+<div class="modal fade" id="getEmailForm" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                       <span aria-hidden="true">&times;</span>
+                       <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Specify an email id to receive complete details of this offer
+                </h4>
+            </div>
 
+            <!-- Modal Body -->
+            <div class="modal-body">
+                  <input type="hidden" name="emailOfferid" id="emailOfferid" value=""/>
+                  <div class="form-group">
+
+                    <label for="modelInputEmail1">Email address</label>
+                      <input type="email" class="form-control email required" id="modelInputEmail1" placeholder="Enter email" data-trigger="manual" data-content="Must be a valid e-mail"/>
+                  </div>
+
+                    <div class="form-group"><button class="btn btn-success" data-dismiss="modal" onclick='sendEmail(document.getElementById("emailOfferid").value);'>Send It!</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="getPhoneForm" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                   data-dismiss="modal">
+                       <span aria-hidden="true">&times;</span>
+                       <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myPhoneLabel">
+                    Specify your phone number to receive a call back!
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                    <input type="hidden" name="phoneOfferid" id="phoneOfferid" value=""/>
+                  <div class="form-group">
+                    <label for="modelInputPhone">Phone Number</label>
+                      <input type="text" class="form-control input-medium bfh-phone" data-country="IN" id="modelInputPhone" placeholder="Enter phone number">
+                  </div>
+
+                    <div class="form-group"><button type="submit" data-dismiss="modal" onclick='phoneCall(document.getElementById("phoneOfferid").value);' class="btn btn-success">Call me!</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
 
