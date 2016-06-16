@@ -222,7 +222,6 @@ def sms():
 
         from models import Establishment, Offer
 
-
         offer_obj = Offer.query.filter_by(id=request.args.get('offer_id')).first()
         establishment_obj = Establishment.query.filter_by(id=offer_obj.establishments_id).first()
 

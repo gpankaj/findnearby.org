@@ -8,15 +8,13 @@ from flask.ext.login import login_user, login_required, current_user, logout_use
 @login_required
 def logout():
     logout_user()
-    #session.pop('email', '')
-    #session.pop('oauth_state','')
     flash('You have been logged out.')
     return redirect(url_for('service_provider.index'))
 
 
 @auth.route('/login')
 def login():
-    from models import get_google_auth, sqlalchemy_obj, User
+    from models import get_google_auth
     from config import Auth
     if current_user.is_authenticated():
         flash("You are already authenticated ")
@@ -28,9 +26,6 @@ def login():
         Auth.AUTH_URI, access_type='offline')
     session['oauth_state'] = state
     return render_template('login.html', auth_url=auth_url)
-
-
-
 
 #################################################
 # Purpose: CallBack
